@@ -10,10 +10,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const UserController = {
     async create(req,res,next){
         try {
-            if (req.file)req.body.avatar = (req.file.destination + req.file.filename);
+            if (req.file) req.body.avatar = req.file.filename;
             else{
-                req.body.avatar = "/assets/user.jpg"
-            }
+                req.body.avatar = "user.jpg"
+            }            
             let password;
             if (req.body.password != undefined){
                 password = bcrypt.hashSync(req.body.password,10);
@@ -91,7 +91,7 @@ const UserController = {
     async getById(req, res){
         try {
             const user = await User.findById(req.params._id);
-            res.status(201).send({message: "Usuario recuperado con éxito", user});
+            res.status(201).json({user});
         } catch (error){
             res.status(500).send({message: "Hubo un problema al buscar al usuario por ID"});
         }
@@ -104,79 +104,54 @@ const UserController = {
             res.status(500).send({message: "Hubo un problema al buscar al usuario por nombre"});
         }
     },
-    async followUser(req, res){
+    async getUserFriends(req,res){
         try {
-            const user = await User.findById(req.params._id);
-            if (user.followedBy.includes(req.user._id)){
-                res.send('Ya estás siguiendo a este usuario');                
+            const { id } = req.params;
+            const user = await User.findById(id);
+        
+            const friends = await Promise.all(
+              user.friends.map((id) => User.findById(id))
+            );
+            const formattedFriends = friends.map(
+              ({ _id, name, avatar }) => {
+                return { _id, name, avatar };
+              }
+            );
+            res.status(200).json(formattedFriends);
+          } catch (err) {
+            res.status(404).json({ message: err.message });
+          }
+    },
+    async addRemoveFriend(req, res){
+        try {
+            const { id, friendId } = req.params;
+            const user = await User.findById(id);
+            const friend = await User.findById(friendId);
+        
+            if (user.friends.includes(friendId)) {
+              user.friends = user.friends.filter((id) => id !== friendId);
+              friend.friends = friend.friends.filter((id) => id !== id);
             } else {
-                const followedUser = await User.findByIdAndUpdate(
-                    req.params._id,
-                    {$push: {followedBy:req.user._id}},
-                    {new: true}
-                )
-                const followerUser = await User.findByIdAndUpdate(
-                    req.user._id,
-                    {$push: {followTo: req.params._id}},
-                    {new: true}
-                )
-                res.status(201).send({followedUser, followerUser});
+              user.friends.push(friendId);
+              friend.friends.push(id);
             }
-        } catch (error){
-            res.status(500).send({message: "Hubo un problema al seguir al usuario"});
-        }
-    },
-    async unfollowUser(req, res){
-        try {
-            const unfollowedUser = await User.findByIdAndUpdate(
-                req.params._id,
-                {$pull: {followedBy:req.user._id}},
-                { new: true}
-            )
-            const unfollowerUser = await User.findByIdAndUpdate(
-                req.user._id,
-                {$pull: {followTo:req.params._id}},
-                { new: true}
-            )
-            res.status(201).send({unfollowedUser, unfollowerUser});
-        } catch (error){
-            res.status(500).send({message: "Hubo un problema al dejar de seguir al usuario"});
-        }
-    },
-    async likePost(req, res) {
-        try {
-            const post = await Post.findById(req.params._id);
-            if (post.likes.includes(req.user._id)) {
-                res.send('Ya le diste a like a este post');
-            } else {
-                const post = await Post.findByIdAndUpdate(
-                  req.params._id,
-                  { $push: { likes: req.user._id } },
-                  { new: true }
-                )
-                .populate('commentIds')
-                .populate('userId');
-                res.status(201).send(post);
-        }        
-                    
-        } catch (error) {                    
-            res.status(500).send({ message: "Hubo un problema con tu like al post" });        
-        }        
-    },
-    async dislikePost(req, res) {
-        try {        
-            const post = await Post.findByIdAndUpdate(        
-            req.params._id,        
-            { $pull: { likes: req.user._id } },        
-            { new: true }                    
-        )
-        .populate('commentIds')
-        .populate('userId');              
-        res.status(201).send(post);        
-        } catch (error) {                    
-            res.status(500).send({ message: "Hubo un problema con tu dislike al post" });        
-        }        
-    },
+            await user.save();
+            await friend.save();
+        
+            const friends = await Promise.all(
+              user.friends.map((id) => User.findById(id))
+            );
+            const formattedFriends = friends.map(
+              ({ _id, name, avatar }) => {
+                return { _id, name, avatar };
+              }
+            );
+        
+            res.status(200).json(formattedFriends);
+          } catch (err) {
+            res.status(404).json({ message: err.message });
+          }
+    },    
     async likeComment(req, res) {
         try {
             const comment = await Comment.findById(req.params._id);

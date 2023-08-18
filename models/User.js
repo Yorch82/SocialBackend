@@ -4,7 +4,7 @@ const ObjectId = mongoose.SchemaTypes.ObjectId;
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: [true, "Por favor rellena tu nombre"]
+        required: [true, "Por favor rellena tu nombre"]
     },
     email:{
         type: String,
@@ -19,11 +19,13 @@ const UserSchema = new mongoose.Schema({
     },
     tokens: [],
     confirmed: Boolean,
-    role: String,
-    followedBy: [{type: ObjectId}],
-    followTo: [{type: ObjectId}],
-    postIds: [{type: ObjectId, ref: "Post"}],
-    commentIds: [{type: ObjectId, ref: "Comment"}],
+    role: String,    
+    friends: {
+        type: Array,
+        default: []
+    },
+    
+    //commentIds: [{type: ObjectId, ref: "Comment"}],
 }, {timestamps: true});
 
 UserSchema.methods.toJSON = function() {

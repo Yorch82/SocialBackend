@@ -2,18 +2,19 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const PostSchema = new mongoose.Schema({
-    title: {
+    name:{
         type: String,
-        require: [true, "Por favor rellena el título del post"]
+        required: true
     },
     content: {
         type: String,
-        require: [true, "Por favor rellena el contenido del post"]
+        required: [true, "Por favor rellena el contenido del post"]
     },
-    avatar: String,
-    userId:{type: ObjectId, ref: 'User'},
-    commentIds:[{type: ObjectId, ref: 'Comment'}],   
-    likes: [{ type: ObjectId }]    
+    postAvatar: String,
+    userAvatar: String,
+    userId:{type: String, required: true},
+    //commentIds:[{type: ObjectId, ref: 'Comment'}],   
+    likes: { type: Map, of: Boolean }    
 }, {timestamps: true});
 
 const Post = mongoose.model('Post', PostSchema);

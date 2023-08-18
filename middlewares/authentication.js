@@ -6,18 +6,35 @@ require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const authentication = async(req, res, next) => {
+    // try {
+    //     const token = req.headers.authorization;
+    //     const payload = jwt.verify(token, JWT_SECRET);
+    //     const user = await User.findOne({ _id: payload._id, tokens: token });
+    //     if (!user) {
+    //         return res.status(401).send({ message: 'No estas autorizado' });
+    //     }
+    //     req.user = user;
+    //     next();
+    // } catch (error) {        
+    //     return res.status(500).send({ error, message: 'Ha habido un problema con el token' });
+    // }
     try {
-        const token = req.headers.authorization;
-        const payload = jwt.verify(token, JWT_SECRET);
-        const user = await User.findOne({ _id: payload._id, tokens: token });
-        if (!user) {
-            return res.status(401).send({ message: 'No estas autorizado' });
+        let token = req.header("Authorization");
+    
+        if (!token) {
+          return res.status(403).send("Access Denied");
         }
-        req.user = user;
+    
+        if (token.startsWith("Bearer ")) {
+          token = token.slice(7, token.length).trimLeft();
+        }
+    
+        const verified = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = verified;
         next();
-    } catch (error) {        
-        return res.status(500).send({ error, message: 'Ha habido un problema con el token' });
-    }
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
 }
 
 const isAdmin = async(req, res, next) => {
