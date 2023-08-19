@@ -13,7 +13,7 @@ const PostSchema = new mongoose.Schema({
     postAvatar: String,
     userAvatar: String,
     userId:{type: String, required: true},
-    //commentIds:[{type: ObjectId, ref: 'Comment'}],   
+    commentIds:[{type: ObjectId, ref: 'Comment'}],   
     likes: { type: Map, of: Boolean }    
 }, {timestamps: true});
 

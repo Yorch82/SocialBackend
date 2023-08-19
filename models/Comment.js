@@ -2,11 +2,16 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const CommentSchema = new mongoose.Schema({
+    name:{
+        type: String,
+        required: true
+    },
     content:String,
-    avatar: String,
-    likes: [{ type: ObjectId }],
-    userId: {type: ObjectId, ref: 'User'},
-    postId: {type: ObjectId, ref: 'Post'}    
+    commentAvatar: String,
+    userAvatar: String,
+    likes: { type: Map, of: Boolean },
+    userId:{type: String, required: true},
+    postId:{type: String, required: true},   
 }, {timestamps: true});
 
 const Comment = mongoose.model('Comment', CommentSchema);

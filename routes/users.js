@@ -16,6 +16,6 @@ router.get('/getFriends/:id', authentication, UserController.getUserFriends);
 router.patch('/:id/:friendId', authentication, UserController.addRemoveFriend);
 router.put('/likeComment/:_id', authentication, UserController.likeComment);
 router.put('/dislikeComment/:_id', authentication, UserController.dislikeComment);
-router.get('/getInfo', authentication, UserController.getInfo);
+router.get('/getInfo/:id', authentication, UserController.getInfo);
 
 module.exports = router;

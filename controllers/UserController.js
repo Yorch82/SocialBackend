@@ -201,19 +201,12 @@ const UserController = {
     },
     async getInfo(req, res) {
         try {
-            const user = await User.findById(req.user._id)
-            .populate({
-                path: "postIds",
-                populate: {
-                    path: "commentIds"
-                }
-            })
-            // .populate("likeIDs")
-            res.send(user)
-        } catch (error) {
-            console.error(error)
-            res.status(500).send({ message: 'Ha habido un problema al cargar la información del usuario' })
-        }
+            const { id } = req.params;
+            const user = await User.findById(id);
+            res.status(200).json(user);
+          } catch (err) {
+            res.status(404).json({ message: err.message });
+          }
     },
     async updatePhoto(req, res) {
         try {           
