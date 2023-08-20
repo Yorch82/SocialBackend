@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -23,9 +22,7 @@ const UserSchema = new mongoose.Schema({
     friends: {
         type: Array,
         default: []
-    },
-    
-    //commentIds: [{type: ObjectId, ref: "Comment"}],
+    },    
 }, {timestamps: true});
 
 UserSchema.methods.toJSON = function() {
