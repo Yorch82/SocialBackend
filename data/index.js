@@ -9,6 +9,7 @@ const userIds = [
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
 ];
 
 const postsIds = [
@@ -21,6 +22,7 @@ const postsIds = [
 ];
 
 const commentsIds = [
+  new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId()
 ];
 
@@ -32,7 +34,6 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p11.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",       
     createdAt: 1115211422,
@@ -46,7 +47,6 @@ const users = [
     password: "$!FEAS@!O)_IDJda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p3.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1595589072,
@@ -60,7 +60,6 @@ const users = [
     password: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     avatar: "p4.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1288090662,
@@ -74,7 +73,6 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p6.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1219214568,
@@ -88,7 +86,6 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p5.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1493463661,
@@ -102,7 +99,6 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p7.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1381326073,
@@ -116,7 +112,6 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p8.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
     createdAt: 1714704324,
@@ -130,9 +125,21 @@ const users = [
     password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
     avatar: "p9.jpeg",
     friends: [],
-    tokens: [],
     confirmed: true,
     role: "user",
+    createdAt: 1369908044,
+    updatedAt: 1359322268,
+    __v: 0,
+  },
+  {
+    _id: userIds[8],
+    name: "Admin",
+    email: "admin@gmail.com",
+    password: "$2a$10$bQ2euidoOzW5qBaEZl/iAOVovV8OT3Xr7l/qacFhS0Bzv/n/EoxrC",
+    avatar: "admin.jpg",
+    friends: [],
+    confirmed: true,
+    role: "admin",
     createdAt: 1369908044,
     updatedAt: 1359322268,
     __v: 0,
@@ -146,7 +153,7 @@ const posts = [
     name: "Steve",
     content: "Some really long random description",
     postAvatar: "post1.jpeg",
-    userAvatar: "p3.jpg",
+    userAvatar: "p3.jpeg",
     likes: new Map([
       [userIds[0], true],
       [userIds[2], true],
@@ -239,13 +246,26 @@ const comments = [
     _id: commentsIds[0],
     name: "test",
     userAvatar: "p11.jpeg",
-    content: "I don't like thjis post :(",
-    commentAvatar: "user.jpg",
+    content: "I don't like this post :(",
+    commentAvatar: "post7.jpg",
     likes: new Map([
       [userIds[1], true],
       [userIds[2], true],
     ]),
     postId: postsIds[5],
+    userId: userIds[0]
+  },
+  {
+    _id: commentsIds[1],
+    name: "test",
+    userAvatar: "p11.jpeg",
+    content: "LMAO xD",
+    commentAvatar: "post8.jpg",
+    likes: new Map([
+      [userIds[1], true],
+      [userIds[2], true],
+    ]),
+    postId: postsIds[4],
     userId: userIds[0]
   }
 ];

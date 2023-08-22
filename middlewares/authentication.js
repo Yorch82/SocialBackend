@@ -5,19 +5,7 @@ const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const authentication = async(req, res, next) => {
-    // try {
-    //     const token = req.headers.authorization;
-    //     const payload = jwt.verify(token, JWT_SECRET);
-    //     const user = await User.findOne({ _id: payload._id, tokens: token });
-    //     if (!user) {
-    //         return res.status(401).send({ message: 'No estas autorizado' });
-    //     }
-    //     req.user = user;
-    //     next();
-    // } catch (error) {        
-    //     return res.status(500).send({ error, message: 'Ha habido un problema con el token' });
-    // }
+const authentication = async(req, res, next) => {   
     try {
         let token = req.header("Authorization");
     
@@ -29,7 +17,7 @@ const authentication = async(req, res, next) => {
           token = token.slice(7, token.length).trimLeft();
         }
     
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
+        const verified = jwt.verify(token, JWT_SECRET);
         req.user = verified;
         next();
       } catch (err) {
@@ -38,8 +26,8 @@ const authentication = async(req, res, next) => {
 }
 
 const isAdmin = async(req, res, next) => {
-    const admins = ['admin','superadmin'];    
-    if (!admins.includes(req.user.role)) {    
+    const admins = "admin";    
+    if (admins != req.user.role) {    
         return res.status(403).send({message: 'You do not have permission'});    
     }    
     next();    

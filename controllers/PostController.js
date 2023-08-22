@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 
 const PostController = {
   async create(req, res, next) {
@@ -19,7 +20,7 @@ const PostController = {
       await newPost.save();
   
       const post = await Post.find();
-      res.status(201).json(post);
+      res.status(201).json(post.reverse());
     } catch (error) {
       error.origin = 'Post';
       next(error);
@@ -27,11 +28,13 @@ const PostController = {
   },
   async delete(req, res) {
     try {
-      const post = await Post.findByIdAndDelete(req.params._id);
-      await User.findByIdAndUpdate(req.user._id, {
-        $pull: { postIds: post._id },
-      });
-      res.status(201).send({ message: 'Post borrado con éxito', post });
+      const post = await Post.findById(req.params._id);
+      await Promise.all(
+        post.commentIds.map((id) => Comment.findByIdAndDelete(id.toString()))
+      );
+      await Post.findByIdAndDelete(req.params._id);      
+      const posts = await Post.find();
+      res.status(201).json( posts );
     } catch (error) {
       res
         .status(500)
@@ -54,9 +57,8 @@ const PostController = {
   },
   async getAll(req, res) {
     try {
-      const posts = await Post.find();
-      //.populate("commentIds")
-      //.populate("userId");
+      const posts = await Post.find()
+      .populate("commentIds");
       res.status(200).json(posts.reverse());
     } catch (error) {
       res
@@ -68,7 +70,6 @@ const PostController = {
     try {
       const post = await Post.findById(req.params._id)
         .populate('commentIds')
-        .populate('userId');
       res.status(201).json({ post });
     } catch (error) {
       res

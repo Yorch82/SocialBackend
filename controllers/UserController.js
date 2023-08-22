@@ -38,10 +38,9 @@ const UserController = {
     },
     async getAll(req, res){
         try {
-            const users = await User.find()
-            .populate("CommentIds")
-            .limit(limit * 1).skip((page -1) * limit);
-            res.send(users);
+            const users = await User.find()     
+            //.limit(limit * 1).skip((page -1) * limit);
+            res.status(201).json(users);
         } catch(error){
             res.status(500).send({message:"Ha habido un problema al recuperar los usuarios"});
         }
@@ -70,22 +69,10 @@ const UserController = {
                 return res.status(403).send({message: "Usuario no confirmado. Verifique su email"})
             }
             const token = jwt.sign({_id: user._id}, JWT_SECRET);
-            if (user.tokens.length > 4) user.tokens.shift();
-            user.tokens.push(token);
             await user.save();
             res.status(200).json({user,token});
         } catch(error) {
             res.status(500).send({message:"Ha habido un problema en el login del usuario"});
-        }
-    },
-    async logout(req, res){
-        try {
-            await User.findByIdAndUpdate(req.user._id, {
-                $pull: { tokens: req.headers.authorization }
-            });
-            res.status(200).send({message: "Desconectado con éxito"});
-        } catch (error) {
-            res.status(500).send({message: "Hubo un problema al intentar desconectar al usuario"});
         }
     },
     async getById(req, res){
@@ -94,14 +81,6 @@ const UserController = {
             res.status(201).json({user});
         } catch (error){
             res.status(500).send({message: "Hubo un problema al buscar al usuario por ID"});
-        }
-    },
-    async getByName(req, res){
-        try {
-            const user = await User.findOne({name: req.params.name});
-            res.status(201).send({message: "Usuario recuperado con éxito", user});
-        } catch (error){
-            res.status(500).send({message: "Hubo un problema al buscar al usuario por nombre"});
         }
     },
     async getUserFriends(req,res){
@@ -151,53 +130,6 @@ const UserController = {
           } catch (err) {
             res.status(404).json({ message: err.message });
           }
-    },    
-    async likeComment(req, res) {
-        try {
-            const comment = await Comment.findById(req.params._id);
-            if (comment.likes.includes(req.user._id)) {
-                res.send('Ya le diste a like a este comentario');
-            } else {
-                const comment = await Comment.findByIdAndUpdate(        
-                    req.params._id,        
-                    { $push: { likes: req.user._id } },        
-                    { new: true }
-                )
-                res.status(201).send(comment);
-            };                     
-                    
-        } catch (error) {
-            console.error(error)                    
-            res.status(500).send({ message: "Hubo un problema con tu like al comenatario" });        
-        }        
-    },
-    async dislikeComment(req, res) {
-        try {        
-            const comment = await Comment.findByIdAndUpdate(        
-            req.params._id,        
-            { $pull: { likes: req.user._id } },        
-            { new: true }        
-        );              
-        res.status(201).send(comment);        
-        } catch (error) {                    
-            res.status(500).send({ message: "Hubo un problema con tu dislike al comentario"});        
-        }        
-    },
-    async checkLoggedUser(req,res) {
-        try{           
-            const user = await User.findOne({tokens: req.headers.authorization})
-            .populate({
-                path: "postIds",
-                populate: {
-                    path: "commentIds"
-                }
-            })
-            .populate("likeIds")            
-            res.status(201).send({ message: 'Usuario conectado: ', user});
-        } catch (error){            
-            res.status(500).send({message: "Hubo un problema al intentar recuperar usuario conectado",
-        });
-      }
     },
     async getInfo(req, res) {
         try {
@@ -226,7 +158,6 @@ const UserController = {
             res.status(500).send({ message: 'Ha habido un problema al actualizar la foto del usuario' })
         }
     } 
-
 }
 
 module.exports = UserController;

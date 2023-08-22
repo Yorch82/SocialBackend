@@ -94,7 +94,7 @@ const CommentController = {
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
-  },
+  },  
 };
 
 module.exports = CommentController;

@@ -16,7 +16,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Por favor rellena tu contraseña"]
     },
-    tokens: [],
     confirmed: Boolean,
     role: String,    
     friends: {
