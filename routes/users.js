@@ -6,7 +6,7 @@ const { uploadAvatar } = require('../middlewares/multer');
 
 router.post('/', uploadAvatar.single('myFile'), UserController.create);
 router.get('/confirm/:emailToken', UserController.confirm);
-router.get('/', authentication, UserController.getAll);
+router.get('/', UserController.getAll);
 router.post('/login', UserController.login);
 router.get('/getById/:_id', authentication, UserController.getById);
 router.get('/getFriends/:id', authentication, UserController.getUserFriends);
