@@ -12,5 +12,6 @@ router.get('/getById/:_id', authentication, UserController.getById);
 router.get('/getFriends/:id', authentication, UserController.getUserFriends);
 router.patch('/:id/:friendId', authentication, UserController.addRemoveFriend);
 router.get('/getInfo/:id', authentication, UserController.getInfo);
+router.delete('/delete/:_id', authentication, UserController.delete);
 
 module.exports = router;

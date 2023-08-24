@@ -157,7 +157,18 @@ const UserController = {
             console.error(error)
             res.status(500).send({ message: 'Ha habido un problema al actualizar la foto del usuario' })
         }
-    } 
+    },
+    async delete(req, res) {
+        try {
+          await User.deleteOne({_id: req.params._id});      
+          const users = await User.find();
+          res.status(201).json( users );
+        } catch (error) {
+          res
+            .status(500)
+            .send({ message: 'Ha habido un problema al borrar el usuario' });
+        }
+      }, 
 }
 
 module.exports = UserController;
