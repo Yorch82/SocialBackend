@@ -55,6 +55,31 @@ module.exports = {
         },
       },
     },
+    "/users/delete/{_id}": {
+      delete: {
+        security: [{ ApiKeyAuth: [] }],
+        tags: ["Users"],
+        summary: "Delete user",
+        description: "Delete user by Id",
+        operationId: "deleteUser",
+        parameters: [
+          {
+            name: "_id",
+            in: "path",
+            description: "Id of user",
+            required: true,
+            schema: {
+              type: "string",
+              example: "629e138fb6e9749879d0dec1"
+            }
+          }
+        ],
+        responses: {
+          200: { description: "User deleted" },
+          500: { description: "Internal server error" },
+        }
+      },
+    },
     "/users/getById/{_id}": {
       get: {
         security: [{ ApiKeyAuth: [] }],

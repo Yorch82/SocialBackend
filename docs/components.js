@@ -101,6 +101,56 @@ module.exports = {
           },
         },
       },
+      deleteUser: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'objectId',
+            description: 'User identification number',
+            example: '6201064b0028de7866e2b2c4',
+          },
+          name: {
+            type: 'string',
+            description: 'User name',
+            example: 'Yorch',
+            required: true,
+          },          
+          email: {
+            type: 'string',
+            description: 'User Email',
+            example: 'yorch@gmail.com',
+            required: true,
+            unique: true,
+          },
+          avatar: {
+            type: 'string',
+            description: 'User avatar',
+            example: '1692442377403.jpg',
+          },
+          confirmed: {
+            type: 'boolean',
+            description: 'User have confirmed email',
+            example: true,
+          },
+          role: {
+            type: 'string',
+            description: 'User rol',
+            example: 'user',
+          },
+          friends: {
+            type: 'array',
+            description: 'User friend list',
+            example: [
+              '64e1f2808be838d86d85cf8b',
+              '64e1f2808be838d86d85cf8a',
+              '64e1f2808be838d86d85cf89',
+              '64e1f2808be838d86d85cf87',
+              '64e1f2808be838d86d85cf8d',
+              '64e1f2808be838d86d85cf8c',
+            ],
+          },
+        },
+      },
       getUserById: {
         type: 'object',
         properties: {
