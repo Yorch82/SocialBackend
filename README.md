@@ -1,7 +1,7 @@
 <!-- LOGO -->
 
 <p align="center">
-  <img width="400" height="240" src='./assets/api.png'>
+  <img width="400" height="240" src='./public/assets/api.png'>
 </p>
 
 <!-- INDICE -->
